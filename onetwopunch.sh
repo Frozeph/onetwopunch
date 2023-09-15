@@ -27,6 +27,37 @@ function usage {
     echo "       -n: NMAP options (-A, -O, etc). Defaults to no options."
 }
 
+# Determine package manager
+if command -v apt-get &> /dev/null
+then
+    PKG_MANAGER="apt-get"
+elif command -v yum &> /dev/null
+then
+    PKG_MANAGER="yum"
+elif command -v dnf &> /dev/null
+then
+    PKG_MANAGER="dnf"
+elif command -v pacman &> /dev/null
+then
+    PKG_MANAGER="pacman"
+else
+    echo "No known package manager found, exiting..."
+    exit 1
+fi
+
+# Check for nmap
+if ! command -v nmap &> /dev/null
+then
+    echo "nmap could not be found, installing now..."
+    sudo $PKG_MANAGER install nmap -y
+fi
+
+# Check for unicornscan
+if ! command -v unicornscan &> /dev/null
+then
+    echo "unicornscan could not be found, installing now..."
+    sudo $PKG_MANAGER install unicornscan -y
+fi
 
 banner
 
